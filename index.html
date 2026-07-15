@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elevate EMS — Ride-Along Portal</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#02273D;
+    --orange:#EF892F;
+    --deep-orange:#F47324;
+    --gold:#F6D55B;
+    --cream:#FBF6EC;
+    --white:#ffffff;
+    --gray-text:#5a6169;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+    background:var(--cream);
+    color:var(--navy);
+    line-height:1.55;
+  }
+  h1,h2,h3{
+    font-family:'Copperplate','Copperplate Gothic Light',Manrope,serif;
+    font-weight:700;
+    letter-spacing:.3px;
+    color:var(--navy);
+  }
+
+  /* ---------- HEADER / NAV ---------- */
+  header{
+    background:var(--navy);
+    padding:10px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    position:sticky; top:0; z-index:50;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  .header-left{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  header img{ width:auto; max-height:60px; flex-shrink:0; display:block; }
+  header .title{
+    color:var(--white); font-size:22px; font-weight:700;
+    font-family:'Copperplate','Copperplate Gothic Light',Manrope,serif;
+  }
+  nav{ display:flex; gap:6px; flex-wrap:wrap; }
+  nav button{
+    background:transparent;
+    border:1.5px solid rgba(255,255,255,.35);
+    color:var(--white);
+    padding:9px 16px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:'Manrope',sans-serif;
+    transition:.15s;
+  }
+  nav button.active{ background:var(--orange); border-color:var(--orange); }
+  nav button:hover{ border-color:var(--orange); }
+
+  main{ max-width:760px; margin:0 auto; padding:32px 18px 80px; }
+  .page{ display:none; }
+  .page.active{ display:block; animation:fade .25s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .card{
+    background:var(--white);
+    border:1.5px solid var(--navy);
+    border-radius:var(--radius);
+    padding:24px 26px;
+    margin-bottom:22px;
+  }
+  .lede{
+    font-size:14.5px; color:var(--gray-text); margin-bottom:6px;
+  }
+  .section-title{
+    font-size:15px; font-weight:700; text-transform:uppercase; letter-spacing:.5px;
+    color:var(--navy); margin:0 0 14px;
+    padding-bottom:8px; border-bottom:2px solid var(--gold);
+  }
+
+  label{ display:block; font-size:13px; font-weight:700; margin:16px 0 6px; color:var(--navy); }
+  label .opt-note{ font-weight:400; color:var(--gray-text); font-size:12px; display:block; margin-top:2px; }
+  input[type=text], input[type=email], input[type=tel], input[type=date], select, textarea{
+    width:100%; padding:10px 12px; font-size:14px; font-family:'Manrope',sans-serif;
+    border:1.5px solid #d9dde2; border-radius:7px; background:#fff; color:var(--navy);
+  }
+  input:focus, select:focus, textarea:focus{ outline:2px solid var(--gold); border-color:var(--gold); }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .row3{ display:grid; grid-template-columns:1.3fr .8fr .6fr; gap:14px; }
+  @media (max-width:560px){ .row2,.row3{ grid-template-columns:1fr; } }
+
+  .file-field{
+    border:1.5px dashed var(--orange);
+    border-radius:7px;
+    padding:12px;
+    background:#fffaf3;
+  }
+  .file-field input[type=file]{ font-size:13px; width:100%; }
+  .file-name-ok{ color:#1e7e34; font-size:12px; font-weight:600; margin-top:6px; }
+
+  .checklist{
+    background:var(--cream);
+    border:1.5px solid var(--navy);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    margin-bottom:18px;
+  }
+  .checklist h3{ font-size:14px; margin:0 0 10px; text-transform:uppercase; letter-spacing:.4px; }
+  .checklist ul{ margin:0; padding-left:20px; }
+  .checklist li{ margin-bottom:7px; font-size:13.5px; color:var(--navy); }
+
+  .notice{
+    border-radius:8px;
+    padding:14px 16px;
+    font-size:13.5px;
+    margin-bottom:16px;
+    line-height:1.5;
+  }
+  .notice-orange{ background:#fff4e8; border-left:4px solid var(--orange); color:#7a4200; }
+  .notice-navy{ background:#eaf0f4; border-left:4px solid var(--navy); color:var(--navy); }
+  .notice-red{ background:#fdecea; border-left:4px solid #c0392b; color:#7a231a; }
+  .notice b{ display:block; margin-bottom:3px; }
+
+  .divider{ border:none; border-top:2px solid var(--gold); margin:26px 0; }
+
+  .ack-block{ font-size:13.5px; }
+  .ack-block ul{ padding-left:20px; }
+  .ack-block li{ margin-bottom:10px; }
+
+  #sigCanvas{
+    border:1.5px solid var(--navy); border-radius:7px; background:#fff;
+    width:100%; height:150px; touch-action:none; cursor:crosshair;
+  }
+  .sig-tools{ display:flex; justify-content:space-between; align-items:center; margin-top:6px; }
+  .sig-tools button{
+    background:none; border:1px solid var(--navy); color:var(--navy);
+    font-size:11.5px; padding:5px 12px; border-radius:14px; cursor:pointer;
+  }
+  .sig-hint{ font-size:11.5px; color:var(--gray-text); }
+
+  .submit-btn{
+    background:var(--orange); color:#fff; border:none; padding:13px 28px;
+    border-radius:8px; font-size:15px; font-weight:700; cursor:pointer;
+    font-family:'Manrope',sans-serif; margin-top:10px; width:100%;
+  }
+  .submit-btn:hover{ background:var(--deep-orange); }
+  .submit-btn:disabled{ background:#c9c9c9; cursor:not-allowed; }
+
+  .status-msg{ margin-top:12px; font-size:13.5px; font-weight:600; display:none; padding:10px 14px; border-radius:7px; }
+  .status-ok{ background:#e6f4ea; color:#1e7e34; }
+  .status-err{ background:#fdecea; color:#c0392b; }
+  .status-info{ background:#eaf0f4; color:var(--navy); }
+
+  .download-list{ display:flex; flex-direction:column; gap:10px; }
+  .download-item{
+    display:flex; align-items:center; justify-content:space-between;
+    border:1.5px solid var(--navy); border-radius:8px; padding:13px 16px; background:#fff;
+  }
+  .download-item .dl-name{ font-weight:700; font-size:14px; }
+  .download-item .dl-sub{ font-size:12px; color:var(--gray-text); margin-top:2px; }
+  .download-item a{
+    background:var(--navy); color:#fff; text-decoration:none; font-size:12.5px;
+    font-weight:700; padding:8px 16px; border-radius:6px; white-space:nowrap;
+  }
+  .download-item a:hover{ background:var(--orange); }
+
+  .required::after{ content:" *"; color:#c0392b; }
+
+  /* ---------- PATIENT CONTACTS PAGE ---------- */
+  .pc-progress-outer{
+    background:#eceef1; border-radius:20px; height:22px; overflow:hidden; margin:14px 0 8px;
+  }
+  .pc-progress-inner{
+    background:var(--orange); height:100%; border-radius:20px 0 0 20px;
+    transition:width .3s ease; display:flex; align-items:center; justify-content:flex-end;
+  }
+  .pc-progress-inner.pc-min-met{ background:#1e7e34; }
+  .pc-progress-text{ font-size:13px; color:var(--navy); font-weight:600; }
+
+  .pc-modal-overlay{
+    position:fixed; inset:0; background:rgba(2,39,61,.55);
+    display:flex; align-items:center; justify-content:center; z-index:200; padding:20px;
+  }
+  .pc-modal{
+    background:#fff; border-radius:12px; padding:26px 28px; max-width:440px; width:100%;
+    box-shadow:0 10px 40px rgba(0,0,0,.25);
+  }
+  .pc-modal h3{ margin:0 0 12px; font-size:17px; }
+  .pc-modal p{ font-size:13.5px; line-height:1.55; color:var(--navy); margin:0 0 12px; }
+  .pc-modal-btns{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+  .pc-modal-btns button{
+    flex:1; padding:10px 14px; border-radius:7px; font-size:13px; font-weight:700;
+    border:1.5px solid var(--navy); background:#fff; color:var(--navy); cursor:pointer; font-family:inherit;
+  }
+  .pc-modal-btns button.pc-primary{ background:var(--orange); border-color:var(--orange); color:#fff; }
+
+  .pc-contact-card{
+    border:1.5px solid #e2e4e9; border-radius:8px; padding:12px 14px; margin-bottom:10px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+  }
+  .pc-contact-card .pc-contact-meta{ font-size:13px; color:var(--navy); }
+  .pc-contact-card .pc-contact-meta b{ display:block; font-size:13.5px; }
+  .pc-contact-card .pc-contact-actions{ display:flex; gap:8px; }
+  .pc-contact-card .pc-contact-actions button{
+    font-size:12px; font-weight:700; padding:6px 12px; border-radius:6px; cursor:pointer; font-family:inherit;
+    border:1.5px solid var(--navy); background:#fff; color:var(--navy);
+  }
+  .pc-empty-note{ font-size:13px; color:var(--gray-text); font-style:italic; }
+  .pc-locked-note{
+    background:#e6f4ea; color:#1e7e34; padding:12px 16px; border-radius:7px; font-size:13.5px; font-weight:600;
+  }
+  .pc-method-btn{
+    flex:1; padding:12px 14px; border-radius:8px; font-size:13.5px; font-weight:700; cursor:pointer;
+    border:1.5px solid var(--navy); background:#fff; color:var(--navy); font-family:inherit;
+  }
+  .pc-method-btn.pc-active{ background:var(--navy); color:#fff; }
+  .req-mark{ color:#c0392b; }
+  .opt-note-inline{ font-weight:400; color:var(--gray-text); font-size:11.5px; }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-left" id="headerLeft">
+    <div class="title">Ride-Along Portal</div>
+    <nav id="navTabs">
+      <button data-page="agreement" class="active" onclick="showPage('agreement')">Ride Along Agreement</button>
+      <button data-page="paperwork" onclick="showPage('paperwork')">Paperwork</button>
+      <button data-page="request" onclick="showPage('request')">Ride Along Request</button>
+      <button data-page="contacts" onclick="showPage('contacts')">Patient Contacts</button>
+    </nav>
+  </div>
+  <img src="logo.png" alt="Elevate EMS" id="headerLogo">
+</header>
+
+<main>
+
+  <!-- ============================================================ -->
+  <!-- PAGE 1: RIDE ALONG AGREEMENT                                  -->
+  <!-- ============================================================ -->
+  <div class="page active" id="page-agreement">
+
+    <div class="notice notice-navy">
+      This form confirms your ride along plan and your acknowledgement of Elevate EMS ride along policies and requirements. It's due on the first day of class, along with your remaining First-Class Paperwork signatures.
+    </div>
+
+    <form id="agreementForm">
+
+      <div class="card">
+        <div class="section-title">Cohort &amp; Student Info</div>
+
+        <label class="required" for="a_cohort">Cohort</label>
+        <select id="a_cohort" name="cohort" required>
+          <option value="" disabled selected>Select your cohort…</option>
+          <option value="Spring">Spring</option>
+          <option value="Summer">Summer</option>
+          <option value="Fall">Fall</option>
+        </select>
+
+        <div class="row2">
+          <div>
+            <label class="required" for="a_name">Full Name</label>
+            <input type="text" id="a_name" name="fullName" required>
+          </div>
+          <div>
+            <label class="required" for="a_email">Email Address</label>
+            <input type="email" id="a_email" name="email" required>
+          </div>
+        </div>
+        <label class="required" for="a_phone">Phone Number</label>
+        <input type="tel" id="a_phone" name="phone" required>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Uniform &amp; Shipping</div>
+
+        <label for="a_shirt">Shirt Size<span class="req-mark"> *</span>
+          <span class="opt-note">This shirt is part of your student uniform and must be worn during ride-alongs and at Academy Week.</span>
+        </label>
+        <select id="a_shirt" name="shirtSize" required>
+          <option value="" disabled selected>Select size…</option>
+          <option>XS</option><option>S</option><option>M</option><option>L</option>
+          <option>XL</option><option>2XL</option><option>3XL</option>
+        </select>
+
+        <label>Mailing Address<span class="req-mark"> *</span> <span class="opt-note">Where we'll ship your shirt — please double-check for accuracy.</span></label>
+        <div class="row2" style="margin-bottom:14px;">
+          <div>
+            <label style="margin-top:0;" class="required" for="a_street">Street Address</label>
+            <input type="text" id="a_street" name="street" required>
+          </div>
+          <div>
+            <label style="margin-top:0;" for="a_street2">Apt / Unit <span class="opt-note-inline">(optional)</span></label>
+            <input type="text" id="a_street2" name="street2">
+          </div>
+        </div>
+        <div class="row3">
+          <div>
+            <label style="margin-top:0;" class="required" for="a_city">City</label>
+            <input type="text" id="a_city" name="city" required>
+          </div>
+          <div>
+            <label style="margin-top:0;" class="required" for="a_state">State</label>
+            <input type="text" id="a_state" name="state" required>
+          </div>
+          <div>
+            <label style="margin-top:0;" class="required" for="a_zip">ZIP Code</label>
+            <input type="text" id="a_zip" name="zip" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Ride Along Plan</div>
+        <label for="a_agency">Agency Name<span class="req-mark"> *</span>
+          <span class="opt-note">Enter the agency name (add "pending" if not yet confirmed). If you need us to connect you with a medical transport company, write "Need help arranging" and your city — this helps us confirm there's a clinical site near you. Note: Please contact us immediately if your self-arranged plans fall through.</span>
+        </label>
+        <input type="text" id="a_agency" name="agencyName" required placeholder='e.g. "Henrico Volunteer Rescue Squad" or "Need help arranging - Richmond, VA"'>
+      </div>
+
+      <div class="notice notice-orange">
+        <b>Ride Along Request Notice</b>
+        If you need help arranging a ride-along, fill out your request on the separate Ride Along Request tab — with as much notice as possible. We require at least one month's notice when scheduling ride-alongs; requests submitted with less notice may not be guaranteed a spot.
+      </div>
+
+      <div class="checklist">
+        <h3>Before Your Ride-Alongs</h3>
+        <ul>
+          <li>Complete Modules 1–2 (including quizzes and exams)</li>
+          <li>Review the following skills videos: Patient Assessment and Vital Signs</li>
+          <li>Review the other skills videos in case opportunities arise to perform these skills</li>
+          <li>Obtain 5 sets of vital signs and upload documentation to JB Learning</li>
+          <li>Pass the Ride Along Readiness Quiz</li>
+          <li>Read the "Patient Contact Instructions" sheet before filling out your documents</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Acknowledgment</div>
+        <p style="font-size:13.5px;">Read and acknowledge the following statements and expectations. By signing below, you understand that this electronic signature is legally binding and carries the same effect as a handwritten signature.</p>
+        <hr class="divider">
+        <div class="ack-block">
+          <ul>
+            <li>I understand Elevate EMS is not liable for any injury, illness, exposure, or damages during my ride alongs.</li>
+            <li>I will follow all course and agency expectations and will not falsify documentation.</li>
+            <li>I cannot begin ride alongs until the following criteria are met: Modules 1 &amp; 2 are complete, patient assessment and vital signs skills videos are viewed, Vital Signs Practice Assignment is completed, and the Ride Along Readiness Quiz is passed.</li>
+            <li>10 patient contacts are required (a minimum of 5 real contacts are required prior to Academy Week).</li>
+            <li>All instructions and required paperwork are located in JB Learning. I must complete a Clinical Training Record and a Patient Contact Form for each patient contact.</li>
+          </ul>
+        </div>
+
+        <label class="required" for="a_printedName">Printed Name</label>
+        <input type="text" id="a_printedName" name="printedName" required>
+
+        <label class="required">Signature</label>
+        <canvas id="sigCanvas"></canvas>
+        <div class="sig-tools">
+          <span class="sig-hint">Sign above using your mouse or finger</span>
+          <button type="button" onclick="clearSig()">Clear</button>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="agreementSubmitBtn">Submit Ride Along Agreement</button>
+      <div class="status-msg" id="agreementStatus"></div>
+    </form>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- PAGE 2: PAPERWORK                                             -->
+  <!-- ============================================================ -->
+  <div class="page" id="page-paperwork">
+    <div class="card">
+      <div class="section-title">Ride-Along Paperwork</div>
+      <p class="lede" style="margin-bottom:16px;">Download and bring physical copies with you to your ride-alongs in order to collect preceptor signatures — every student needs these regardless of which agency you're riding with.</p>
+      <div class="download-list">
+        <div class="download-item">
+          <div>
+            <div class="dl-name">Patient Contact Instructions</div>
+            <div class="dl-sub">Read this before filling out your documents</div>
+          </div>
+          <a href="forms/Patient_Contact_Instructions.pdf" download>Download</a>
+        </div>
+        <div class="download-item">
+          <div>
+            <div class="dl-name">Clinical Training Record</div>
+            <div class="dl-sub">VDH Form TR-05 — log of every contact/rotation, preceptor signatures</div>
+          </div>
+          <a href="forms/Clinical_Training_Record.pdf" download>Download</a>
+        </div>
+        <div class="download-item">
+          <div>
+            <div class="dl-name">Patient Contact Form</div>
+            <div class="dl-sub">One per patient contact — full PCR-style write-up</div>
+          </div>
+          <a href="forms/Patient_Contact_Form.pdf" download>Download</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist">
+      <h3>Ride-Along Reminders</h3>
+      <ul>
+        <li>Be sure to wear your class shirt to your ride-alongs — you're required to be identifiable as a student, and you're representing our program in these clinical settings</li>
+        <li>Be proactive — appropriately ask to assist with skills when opportunities arise</li>
+        <li>Maintain professionalism at all times. You represent Elevate EMS</li>
+        <li>Obtain all required preceptor signatures before leaving your shift (only needed on the Clinical Training Record)</li>
+        <li>Upload all completed ride-along paperwork to JBL for us to review <b>AND</b> bring physical copies with you to Academy Week to turn in</li>
+      </ul>
+    </div>
+    <div class="notice notice-navy">
+      <b>Reminder</b>
+      Upload completed paperwork to JB Learning for us to review, and bring physical copies with you to Academy Week to turn in.
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- PAGE 3: RIDE ALONG REQUEST                                    -->
+  <!-- ============================================================ -->
+  <div class="page" id="page-request">
+
+    <div class="notice notice-orange">
+      <b>Ride Along Request Notice</b>
+      We require at least one month's notice when scheduling ride-alongs. Requests submitted with less notice may not be guaranteed a spot.
+    </div>
+
+    <div class="notice notice-red">
+      <b>Attendance &amp; Cancellation Policy</b>
+      No call/no-shows are not acceptable. If you need to cancel, significant advance notice is required so that date can be given to another student. Late cancellations may result in the loss of clinical access, meaning you would need to arrange your own ride-along going forward. We rely on a strong relationship with our clinical sites and need to send them reliable students who show up, on time and prepared.
+    </div>
+
+    <div class="card">
+      <div class="section-title">Required Downloads — Fill Out &amp; Sign, Then Upload Below</div>
+      <div class="download-list">
+        <div class="download-item">
+          <div>
+            <div class="dl-name">EMT Student Ride-Along Agreement (Lifecare)</div>
+            <div class="dl-sub">Fill out, sign, and upload the completed copy below</div>
+          </div>
+          <a href="forms/Lifecare_Ride_Along_Agreement.pdf" download>Download</a>
+        </div>
+        <div class="download-item">
+          <div>
+            <div class="dl-name">HIPAA Agreement (Lifecare)</div>
+            <div class="dl-sub">Fill out, sign, and upload the completed copy below</div>
+          </div>
+          <a href="forms/Lifecare_HIPAA_Agreement.pdf" download>Download</a>
+        </div>
+      </div>
+    </div>
+
+    <form id="requestForm">
+      <div class="card">
+        <div class="section-title">Cohort &amp; Student Info</div>
+
+        <label class="required" for="r_cohort">Cohort</label>
+        <select id="r_cohort" name="cohort" required>
+          <option value="" disabled selected>Select your cohort…</option>
+          <option value="Spring">Spring</option>
+          <option value="Summer">Summer</option>
+          <option value="Fall">Fall</option>
+        </select>
+
+        <div class="row2">
+          <div>
+            <label class="required" for="r_name">Full Name</label>
+            <input type="text" id="r_name" name="fullName" required>
+          </div>
+          <div>
+            <label class="required" for="r_email">Email Address</label>
+            <input type="email" id="r_email" name="email" required>
+          </div>
+        </div>
+
+        <label class="required" for="r_city">City You'd Like to Complete Your Ride-Alongs In</label>
+        <input type="text" id="r_city" name="rideAlongCity" required placeholder="e.g. Richmond, VA">
+
+        <label class="required" for="r_dates">Requested Ride-Along Date(s)</label>
+        <input type="text" id="r_dates" name="requestedDates" required placeholder="List as many dates as possible to allow for clinical site availability">
+      </div>
+
+      <div class="notice notice-orange">
+        <b>Before You Upload</b>
+        Please save each file with your name and the name of the document (e.g. "Gabriella Brown - Ride-Along Agreement") — these files are uploaded directly into your student records with our clinical site.
+      </div>
+
+      <div class="card">
+        <div class="section-title">Upload Your Completed Documents</div>
+
+        <label class="required" for="r_agreementFile">Signed Ride-Along Agreement (Lifecare)</label>
+        <div class="file-field">
+          <input type="file" id="r_agreementFile" name="agreementFile" accept=".pdf,.jpg,.jpeg,.png" required>
+        </div>
+
+        <label class="required" for="r_hipaaFile">Signed HIPAA Agreement (Lifecare)</label>
+        <div class="file-field">
+          <input type="file" id="r_hipaaFile" name="hipaaFile" accept=".pdf,.jpg,.jpeg,.png" required>
+        </div>
+
+        <label for="r_cprFile">Current CPR Card
+          <span class="opt-note">Your CPR certification is required before your ride-along dates — if you don't upload it here, you must send us a copy separately once you obtain it. This is in addition to your CPR upload requirement in JB Learning, as these attachments go to your student records with our clinical site.</span>
+        </label>
+        <div class="file-field">
+          <input type="file" id="r_cprFile" name="cprFile" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="requestSubmitBtn">Submit Ride Along Request</button>
+      <div class="status-msg" id="requestStatus"></div>
+    </form>
+
+    <div class="notice notice-navy" style="margin-top:22px;">
+      <b>What happens after you submit</b>
+      Your submission and attachments are sent directly to us. We'll forward your info to our ambulance transport company partner and follow up with your confirmed clinical site and date(s)/time(s) by email. If we're unable to coordinate your availability with our primary clinical site, we'll email you separately about additional documentation we'll need.
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- PAGE 4: PATIENT CONTACTS                                      -->
+  <!-- ============================================================ -->
+  <div class="page" id="page-contacts">
+
+    <div id="pc-login-gate">
+      <div class="card">
+        <div class="section-title">Patient Contacts Login</div>
+        <p class="lede">Enter your info to view your saved patient contacts or add a new one. This page is for real patient contacts only — simulated contacts are completed in person at Academy Week.</p>
+
+        <label class="required" for="pc-login-cohort">Cohort</label>
+        <select id="pc-login-cohort" required>
+          <option value="" disabled selected>Select your cohort…</option>
+          <option value="Spring">Spring</option>
+          <option value="Summer">Summer</option>
+          <option value="Fall">Fall</option>
+        </select>
+
+        <label class="required" for="pc-login-name">Full Name</label>
+        <input type="text" id="pc-login-name" required>
+
+        <label class="required" for="pc-login-email">Email</label>
+        <input type="email" id="pc-login-email" required>
+
+        <button class="submit-btn" onclick="pcLogin()" id="pc-login-btn">Continue</button>
+        <div class="status-msg" id="pc-login-status"></div>
+      </div>
+    </div>
+
+    <div id="pc-dashboard" style="display:none;">
+
+      <div class="card">
+        <div class="section-title">Your Progress</div>
+        <p style="font-size:13px; color:var(--gray-text); margin:0;">Logged in as <b id="pc-display-name"></b> — <span id="pc-display-cohort"></span></p>
+        <div class="pc-progress-outer"><div class="pc-progress-inner" id="pc-progress-bar"></div></div>
+        <div class="pc-progress-text" id="pc-progress-text"></div>
+      </div>
+
+      <div id="pc-locked-banner" style="display:none;" class="pc-locked-note">
+        ✓ You've submitted your patient contacts as complete. Staff has been notified. You can still view your saved contacts, and add more below if you happen to get additional contacts.
+      </div>
+
+      <div class="card" id="pc-add-card">
+        <div class="section-title" id="pc-add-card-title">Add a Patient Contact</div>
+        <form id="pc-add-form">
+
+          <div style="display:flex; gap:10px; margin-bottom:16px;">
+            <button type="button" class="pc-method-btn" id="pc-method-form-btn" onclick="pcSelectMethod('form')">Fill Out On Form</button>
+            <button type="button" class="pc-method-btn" id="pc-method-photo-btn" onclick="pcSelectMethod('photo')">Upload a Copy Instead</button>
+          </div>
+
+          <div id="pc-fill-panel" style="display:none;">
+            <p style="font-size:12.5px; color:var(--gray-text); margin-bottom:8px;">Write directly on the form below using your finger, mouse, or stylus.</p>
+            <div id="pcPdfWrapper" style="position:relative; width:100%; max-width:700px; margin:0 auto 10px;">
+              <canvas id="pcPdfCanvas" style="width:100%; display:block; border:1.5px solid var(--navy); border-radius:7px;"></canvas>
+              <canvas id="pcInkCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; touch-action:none; cursor:crosshair;"></canvas>
+            </div>
+            <div class="sig-tools">
+              <span class="sig-hint">This becomes your saved copy of this contact</span>
+              <button type="button" onclick="pcClearInk()">Clear My Writing</button>
+            </div>
+          </div>
+
+          <div id="pc-photo-panel" style="display:none;">
+            <label for="pc-photo-upload">Upload a photo of your completed physical copy</label>
+            <div class="file-field">
+              <input type="file" id="pc-photo-upload" accept=".pdf,.jpg,.jpeg,.png">
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn" id="pc-add-submit-btn" style="margin-top:16px;">Save This Contact</button>
+          <div class="status-msg" id="pc-add-status"></div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="section-title">My Contacts</div>
+        <div id="pc-contacts-list"><p class="pc-empty-note">No contacts saved yet.</p></div>
+      </div>
+
+      <button class="submit-btn" id="pc-done-btn" onclick="pcTrySubmitDone()">Submit / I'm Done</button>
+      <div class="status-msg" id="pc-done-status"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- No account found modal -->
+<div class="pc-modal-overlay" id="pc-no-account-modal" style="display:none;">
+  <div class="pc-modal">
+    <h3>No Account Found</h3>
+    <p>We don't have any patient contacts on file for that name/email in this cohort yet.</p>
+    <p>If you think this is a typo, go back and double-check your info. If this is genuinely your first time here, go ahead and create a new account.</p>
+    <div class="pc-modal-btns">
+      <button onclick="pcCloseNoAccountModal()">Check My Info</button>
+      <button class="pc-primary" onclick="pcCreateNewAccount()">Create New Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- Submit confirmation modal (shown if <10 contacts) -->
+<div class="pc-modal-overlay" id="pc-confirm-modal" style="display:none;">
+  <div class="pc-modal">
+    <h3>Before You Submit</h3>
+    <p>You currently have <b id="pc-confirm-count"></b> of 10 real patient contacts. By submitting now, you acknowledge that if you do not obtain all 10 real contacts, you will be required to complete simulated contact(s) at Academy Week, which will require additional documentation from you during that week.</p>
+    <div class="pc-modal-btns">
+      <button onclick="pcCancelSubmit()">Go Back</button>
+      <button class="pc-primary" onclick="pcConfirmSubmit()">I Understand, Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- View contact modal -->
+<div class="pc-modal-overlay" id="pc-view-modal" style="display:none;">
+  <div class="pc-modal" style="max-width:560px; max-height:80vh; overflow-y:auto;" id="pc-view-modal-content"></div>
+</div>
+
+
+<script>
+/* =========================================================
+   CONFIG — fill this in once your Apps Script is deployed
+   ========================================================= */
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx8vtwTbhn3iYnFBRPtz4PUYtEexZdGzD4X2izm9diTaBK6VzULTkARZfMoeNzN9g8W6g/exec";
+
+/* ---------------------------------------------------------
+   TAB NAVIGATION
+   --------------------------------------------------------- */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('#navTabs button').forEach(b => b.classList.remove('active'));
+  document.querySelector(`#navTabs button[data-page="${id}"]`).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ---------------------------------------------------------
+   LOGO HEIGHT SYNC — matches the logo to the title+nav block's
+   height on desktop (single-line nav), capped so it can't balloon
+   when nav wraps to multiple lines on narrow/mobile screens
+   --------------------------------------------------------- */
+const LOGO_MAX_HEIGHT = 60;
+function syncLogoHeight(){
+  const left = document.getElementById('headerLeft');
+  const logo = document.getElementById('headerLogo');
+  if(left && logo) logo.style.height = Math.min(left.offsetHeight, LOGO_MAX_HEIGHT) + 'px';
+}
+window.addEventListener('load', syncLogoHeight);
+window.addEventListener('resize', syncLogoHeight);
+syncLogoHeight();
+
+/* ---------------------------------------------------------
+   SIGNATURE PAD
+   --------------------------------------------------------- */
+const sigCanvas = document.getElementById('sigCanvas');
+const sigCtx = sigCanvas.getContext('2d');
+let drawing = false, sigHasContent = false;
+
+function resizeCanvas(){
+  const ratio = window.devicePixelRatio || 1;
+  const rect = sigCanvas.getBoundingClientRect();
+  sigCanvas.width = rect.width * ratio;
+  sigCanvas.height = rect.height * ratio;
+  sigCtx.setTransform(1, 0, 0, 1, 0, 0); // reset before scaling so repeated resizes don't compound
+  sigCtx.scale(ratio, ratio);
+  sigCtx.strokeStyle = "#02273D";
+  sigCtx.lineWidth = 2;
+  sigCtx.lineCap = "round";
+  sigCtx.lineJoin = "round";
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function getPos(e){
+  const rect = sigCanvas.getBoundingClientRect();
+  const p = e.touches ? e.touches[0] : e;
+  return { x: p.clientX - rect.left, y: p.clientY - rect.top };
+}
+
+let sigPoints = [];
+
+function startDraw(e){
+  drawing = true; sigHasContent = true;
+  const p = getPos(e);
+  sigPoints = [p];
+  sigCtx.beginPath();
+  sigCtx.moveTo(p.x, p.y);
+  e.preventDefault();
+}
+function moveDraw(e){
+  if(!drawing) return;
+  const p = getPos(e);
+  sigPoints.push(p);
+  // Draw a smooth curve through the midpoint of the last two points, rather
+  // than a straight line to the raw point — this is what keeps the stroke
+  // smooth even when the input device (e.g. a trackpad) reports fewer,
+  // farther-apart points than a mouse would.
+  if(sigPoints.length > 2){
+    const prev = sigPoints[sigPoints.length - 2];
+    const mid = { x: (prev.x + p.x) / 2, y: (prev.y + p.y) / 2 };
+    sigCtx.quadraticCurveTo(prev.x, prev.y, mid.x, mid.y);
+    sigCtx.stroke();
+  }
+  e.preventDefault();
+}
+function endDraw(){ drawing = false; sigPoints = []; }
+
+sigCanvas.addEventListener('mousedown', startDraw);
+sigCanvas.addEventListener('mousemove', moveDraw);
+window.addEventListener('mouseup', endDraw);
+sigCanvas.addEventListener('touchstart', startDraw, {passive:false});
+sigCanvas.addEventListener('touchmove', moveDraw, {passive:false});
+sigCanvas.addEventListener('touchend', endDraw);
+
+function clearSig(){
+  sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height);
+  sigHasContent = false;
+}
+
+/* ---------------------------------------------------------
+   FILE -> BASE64 HELPER
+   --------------------------------------------------------- */
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ---------------------------------------------------------
+   SUBMIT HANDLERS
+   --------------------------------------------------------- */
+function setStatus(el, ok, msg){
+  el.style.display = 'block';
+  el.className = 'status-msg ' + (ok ? 'status-ok' : 'status-err');
+  el.textContent = msg;
+}
+function setStatusInfo(el, msg){
+  el.style.display = 'block';
+  el.className = 'status-msg status-info';
+  el.textContent = msg;
+}
+
+document.getElementById('agreementForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const btn = document.getElementById('agreementSubmitBtn');
+  const status = document.getElementById('agreementStatus');
+
+  if(!sigHasContent){
+    setStatus(status, false, "Please sign before submitting.");
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = "Submitting…";
+  setStatusInfo(status, "Submitting… this may take a moment. Please don't refresh or close this page.");
+
+  const payload = {
+    type: "agreement",
+    cohort: document.getElementById('a_cohort').value,
+    fullName: document.getElementById('a_name').value,
+    email: document.getElementById('a_email').value,
+    phone: document.getElementById('a_phone').value,
+    shirtSize: document.getElementById('a_shirt').value,
+    street: document.getElementById('a_street').value,
+    street2: document.getElementById('a_street2').value,
+    city: document.getElementById('a_city').value,
+    state: document.getElementById('a_state').value,
+    zip: document.getElementById('a_zip').value,
+    agencyName: document.getElementById('a_agency').value,
+    printedName: document.getElementById('a_printedName').value,
+    signatureImage: sigCanvas.toDataURL('image/png'),
+    submittedAt: new Date().toISOString()
+  };
+
+  try{
+    const res = await fetch(APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(payload) });
+    const data = await res.json();
+    if(data.status === "error") throw new Error(data.message || "Server reported an error.");
+    setStatus(status, true, "Submitted! You'll receive your class shirt after you complete all of the Module 1 coursework.");
+    this.reset();
+    clearSig();
+  }catch(err){
+    console.error(err);
+    setStatus(status, false, "Something went wrong submitting this form. Please try again or email us directly.");
+  }finally{
+    btn.disabled = false; btn.textContent = "Submit Ride Along Agreement";
+  }
+});
+
+document.getElementById('requestForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const btn = document.getElementById('requestSubmitBtn');
+  const status = document.getElementById('requestStatus');
+  btn.disabled = true; btn.textContent = "Uploading…";
+  setStatusInfo(status, "Submitting… this may take a moment while your files upload. Please don't refresh or close this page.");
+
+  try{
+    const agreementFile = document.getElementById('r_agreementFile').files[0];
+    const hipaaFile = document.getElementById('r_hipaaFile').files[0];
+    const cprFile = document.getElementById('r_cprFile').files[0]; // optional — may be undefined
+
+    const [agreementB64, hipaaB64, cprB64] = await Promise.all([
+      fileToBase64(agreementFile), fileToBase64(hipaaFile), cprFile ? fileToBase64(cprFile) : Promise.resolve(null)
+    ]);
+
+    const files = [
+      { field:"Ride-Along Agreement", name: agreementFile.name, mimeType: agreementFile.type, base64: agreementB64 },
+      { field:"HIPAA Agreement", name: hipaaFile.name, mimeType: hipaaFile.type, base64: hipaaB64 }
+    ];
+    if (cprFile) {
+      files.push({ field:"CPR Card", name: cprFile.name, mimeType: cprFile.type, base64: cprB64 });
+    }
+
+    const payload = {
+      type: "request",
+      cohort: document.getElementById('r_cohort').value,
+      fullName: document.getElementById('r_name').value,
+      email: document.getElementById('r_email').value,
+      rideAlongCity: document.getElementById('r_city').value,
+      requestedDates: document.getElementById('r_dates').value,
+      submittedAt: new Date().toISOString(),
+      files: files
+    };
+
+    const res = await fetch(APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(payload) });
+    const data = await res.json();
+    if(data.status === "error") throw new Error(data.message || "Server reported an error.");
+    setStatus(status, true, "Submitted! We'll reach out by email with your confirmed clinical site and date(s)/time(s).");
+    this.reset();
+  }catch(err){
+    console.error(err);
+    setStatus(status, false, "Something went wrong submitting this form. Please try again or email us directly.");
+  }finally{
+    btn.disabled = false; btn.textContent = "Submit Ride Along Request";
+  }
+});
+
+/* =========================================================
+   PATIENT CONTACTS
+   ========================================================= */
+let pcCohort = "", pcName = "", pcEmail = "", pcContacts = [], pcLocked = false, pcEditingIndex = null;
+
+async function pcLogin(){
+  const cohort = document.getElementById('pc-login-cohort').value;
+  const name = document.getElementById('pc-login-name').value.trim();
+  const email = document.getElementById('pc-login-email').value.trim();
+  const status = document.getElementById('pc-login-status');
+
+  if(!cohort || !name || !email){
+    setStatus(status, false, "Please fill in cohort, name, and email.");
+    return;
+  }
+
+  const btn = document.getElementById('pc-login-btn');
+  btn.disabled = true; btn.textContent = "Checking…";
+  setStatusInfo(status, "Looking up your account…");
+
+  try{
+    const res = await fetch(APPS_SCRIPT_URL + "?action=lookupContacts&cohort=" + encodeURIComponent(cohort) + "&fullName=" + encodeURIComponent(name));
+    const data = await res.json();
+    if(data.status === "error") throw new Error(data.message || "Server reported an error.");
+
+    pcCohort = cohort; pcName = name; pcEmail = email;
+
+    if(data.found){
+      pcContacts = data.contacts;
+      status.style.display = 'none';
+      pcShowDashboard();
+    }else{
+      document.getElementById('pc-no-account-modal').style.display = 'flex';
+    }
+  }catch(err){
+    console.error(err);
+    setStatus(status, false, "Something went wrong checking your account. Please try again.");
+  }finally{
+    btn.disabled = false; btn.textContent = "Continue";
+  }
+}
+
+function pcCloseNoAccountModal(){
+  document.getElementById('pc-no-account-modal').style.display = 'none';
+}
+function pcCreateNewAccount(){
+  document.getElementById('pc-no-account-modal').style.display = 'none';
+  pcContacts = [];
+  pcShowDashboard();
+}
+
+function pcShowDashboard(){
+  document.getElementById('pc-login-gate').style.display = 'none';
+  document.getElementById('pc-dashboard').style.display = 'block';
+  document.getElementById('pc-display-name').textContent = pcName;
+  document.getElementById('pc-display-cohort').textContent = pcCohort;
+  pcRenderProgress();
+  pcRenderContactsList();
+}
+
+function pcRenderProgress(){
+  const n = pcContacts.length;
+  const pct = Math.min((n / 10) * 100, 100);
+  const bar = document.getElementById('pc-progress-bar');
+  bar.style.width = pct + "%";
+  bar.classList.toggle('pc-min-met', n >= 10);
+  document.getElementById('pc-progress-text').textContent =
+    n + " of 10 real patient contacts completed (5 minimum required)";
+  document.getElementById('pc-done-btn').disabled = n < 5;
+  document.getElementById('pc-done-btn').style.opacity = n < 5 ? "0.5" : "1";
+}
+
+function pcRenderContactsList(){
+  const list = document.getElementById('pc-contacts-list');
+  if(!pcContacts.length){
+    list.innerHTML = '<p class="pc-empty-note">No contacts saved yet.</p>';
+    return;
+  }
+  list.innerHTML = pcContacts.map((c) => `
+    <div class="pc-contact-card">
+      <div class="pc-contact-meta">
+        <b>Contact #${c.index}</b>
+      </div>
+      <div class="pc-contact-actions">
+        <button onclick="pcViewContact(${c.index})">View</button>
+        ${pcLocked ? '' : `<button onclick="pcEditContact(${c.index})">Edit</button>`}
+      </div>
+    </div>
+  `).join('');
+}
+
+function pcViewContact(index){
+  const c = pcContacts.find(x => x.index === index);
+  if(c && c.url !== '#') window.open(c.url, '_blank');
+}
+
+function pcEditContact(index){
+  pcEditingIndex = index;
+  document.getElementById('pc-add-card-title').textContent = "Edit Contact #" + index;
+  document.getElementById('pc-add-submit-btn').textContent = "Save Changes";
+  document.getElementById('pc-add-card').scrollIntoView({behavior:'smooth'});
+  pcSelectMethod('form');
+}
+
+/* ---- Fill-method selector ---- */
+let pcMethod = null;
+let pcPdfRendered = false;
+
+function pcSelectMethod(method){
+  pcMethod = method;
+  document.getElementById('pc-method-form-btn').classList.toggle('pc-active', method === 'form');
+  document.getElementById('pc-method-photo-btn').classList.toggle('pc-active', method === 'photo');
+  document.getElementById('pc-fill-panel').style.display = method === 'form' ? 'block' : 'none';
+  document.getElementById('pc-photo-panel').style.display = method === 'photo' ? 'block' : 'none';
+  if(method === 'form' && !pcPdfRendered){
+    pcRenderPdfPage();
+  }
+}
+
+/* ---- PDF.js rendering + ink overlay (fill directly on the form) ---- */
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+const PATIENT_CONTACT_PDF_URL = "forms/Patient_Contact_Form.pdf";
+
+let pcInkHasContent = false, pcInkDrawing = false, pcInkPoints = [];
+let pcPdfCanvas, pcInkCanvas, pcInkCtx;
+
+async function pcRenderPdfPage(){
+  pcPdfCanvas = document.getElementById('pcPdfCanvas');
+  pcInkCanvas = document.getElementById('pcInkCanvas');
+  pcInkCtx = pcInkCanvas.getContext('2d');
+
+  const loadingTask = pdfjsLib.getDocument(PATIENT_CONTACT_PDF_URL);
+  const pdf = await loadingTask.promise;
+  const page = await pdf.getPage(1);
+
+  const ratio = window.devicePixelRatio || 1;
+  const containerWidth = document.getElementById('pcPdfWrapper').clientWidth;
+  const unscaled = page.getViewport({ scale: 1 });
+  const scale = (containerWidth / unscaled.width) * ratio;
+  const viewport = page.getViewport({ scale });
+
+  pcPdfCanvas.width = viewport.width;
+  pcPdfCanvas.height = viewport.height;
+  pcPdfCanvas.style.height = (viewport.height / ratio) + "px";
+
+  const ctx = pcPdfCanvas.getContext('2d');
+  await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+  pcInkCanvas.width = pcPdfCanvas.width;
+  pcInkCanvas.height = pcPdfCanvas.height;
+  pcInkCanvas.style.height = pcPdfCanvas.style.height;
+  pcInkCtx.strokeStyle = "#000000";
+  pcInkCtx.lineWidth = 2.5 * ratio;
+  pcInkCtx.lineCap = "round";
+  pcInkCtx.lineJoin = "round";
+
+  pcInkCanvas.addEventListener('mousedown', pcInkStart);
+  pcInkCanvas.addEventListener('mousemove', pcInkMove);
+  window.addEventListener('mouseup', pcInkEnd);
+  pcInkCanvas.addEventListener('touchstart', pcInkStart, {passive:false});
+  pcInkCanvas.addEventListener('touchmove', pcInkMove, {passive:false});
+  pcInkCanvas.addEventListener('touchend', pcInkEnd);
+
+  pcPdfRendered = true;
+}
+
+function pcInkPos(e){
+  const rect = pcInkCanvas.getBoundingClientRect();
+  const p = e.touches ? e.touches[0] : e;
+  const scaleX = pcInkCanvas.width / rect.width;
+  const scaleY = pcInkCanvas.height / rect.height;
+  return { x: (p.clientX - rect.left) * scaleX, y: (p.clientY - rect.top) * scaleY };
+}
+function pcInkStart(e){
+  pcInkDrawing = true; pcInkHasContent = true;
+  const p = pcInkPos(e);
+  pcInkPoints = [p];
+  pcInkCtx.beginPath();
+  pcInkCtx.moveTo(p.x, p.y);
+  e.preventDefault();
+}
+function pcInkMove(e){
+  if(!pcInkDrawing) return;
+  const p = pcInkPos(e);
+  pcInkPoints.push(p);
+  if(pcInkPoints.length > 2){
+    const prev = pcInkPoints[pcInkPoints.length - 2];
+    const mid = { x: (prev.x + p.x) / 2, y: (prev.y + p.y) / 2 };
+    pcInkCtx.quadraticCurveTo(prev.x, prev.y, mid.x, mid.y);
+    pcInkCtx.stroke();
+  }
+  e.preventDefault();
+}
+function pcInkEnd(){ pcInkDrawing = false; pcInkPoints = []; }
+function pcClearInk(){
+  if(pcInkCtx) pcInkCtx.clearRect(0, 0, pcInkCanvas.width, pcInkCanvas.height);
+  pcInkHasContent = false;
+}
+
+function pcFlattenPdfAndInk(){
+  const combined = document.createElement('canvas');
+  combined.width = pcPdfCanvas.width;
+  combined.height = pcPdfCanvas.height;
+  const cctx = combined.getContext('2d');
+  cctx.drawImage(pcPdfCanvas, 0, 0);
+  cctx.drawImage(pcInkCanvas, 0, 0);
+  return combined.toDataURL('image/png');
+}
+
+/* ---- Add contact form submit ---- */
+document.getElementById('pc-add-form').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const status = document.getElementById('pc-add-status');
+
+  if(!pcMethod){
+    setStatus(status, false, "Please choose how you'd like to complete this contact.");
+    return;
+  }
+
+  let fileBase64, fileMimeType, methodLabel;
+
+  if(pcMethod === 'form'){
+    if(!pcInkHasContent){
+      setStatus(status, false, "Please fill out the form before saving.");
+      return;
+    }
+    fileBase64 = pcFlattenPdfAndInk();
+    fileMimeType = 'image/png';
+    methodLabel = 'Filled on Form';
+  } else {
+    const file = document.getElementById('pc-photo-upload').files[0];
+    if(!file){
+      setStatus(status, false, "Please choose a photo to upload.");
+      return;
+    }
+    fileBase64 = await fileToBase64(file);
+    fileMimeType = file.type;
+    methodLabel = 'Uploaded Photo';
+  }
+
+  const btn = document.getElementById('pc-add-submit-btn');
+  btn.disabled = true; btn.textContent = pcEditingIndex ? "Saving Changes…" : "Saving…";
+  setStatusInfo(status, "Saving this contact…");
+
+  const payload = {
+    type: "addContact",
+    cohort: pcCohort,
+    fullName: pcName,
+    email: pcEmail,
+    fileBase64: fileBase64,
+    fileMimeType: fileMimeType,
+    method: methodLabel,
+    editIndex: pcEditingIndex || null
+  };
+
+  try{
+    const res = await fetch(APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(payload) });
+    const data = await res.json();
+    if(data.status === "error") throw new Error(data.message || "Server reported an error.");
+    const savedContact = data.contact; // {index, url}
+
+    if(pcEditingIndex){
+      // Replaced an existing contact — no change to the total count
+      const existing = pcContacts.find(c => c.index === pcEditingIndex);
+      if(existing && savedContact) existing.url = savedContact.url;
+    }else if(savedContact){
+      pcContacts.push({ index: savedContact.index, url: savedContact.url });
+    }
+    pcRenderProgress();
+    pcRenderContactsList();
+
+    setStatus(status, true, pcEditingIndex ? "Changes saved!" : "Saved! You can add another contact whenever you're ready.");
+    if(pcMethod === 'form') pcClearInk();
+    document.getElementById('pc-photo-upload').value = '';
+
+    // Reset back to "add new" mode after either a fresh save or an edit
+    pcEditingIndex = null;
+    document.getElementById('pc-add-card-title').textContent = "Add a Patient Contact";
+    document.getElementById('pc-add-submit-btn').textContent = "Save This Contact";
+  }catch(err){
+    console.error(err);
+    setStatus(status, false, "Something went wrong saving this contact. Please try again.");
+  }finally{
+    btn.disabled = false; btn.textContent = "Save This Contact";
+  }
+});
+
+/* ---- Submit / I'm Done ---- */
+function pcTrySubmitDone(){
+  if(pcContacts.length < 5) return;
+  if(pcContacts.length < 10){
+    document.getElementById('pc-confirm-count').textContent = pcContacts.length;
+    document.getElementById('pc-confirm-modal').style.display = 'flex';
+  }else{
+    pcConfirmSubmit();
+  }
+}
+function pcCancelSubmit(){
+  document.getElementById('pc-confirm-modal').style.display = 'none';
+}
+async function pcConfirmSubmit(){
+  document.getElementById('pc-confirm-modal').style.display = 'none';
+  const status = document.getElementById('pc-done-status');
+  const btn = document.getElementById('pc-done-btn');
+  btn.disabled = true; btn.textContent = "Submitting…";
+  setStatusInfo(status, "Submitting your completed contacts…");
+
+  try{
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method:'POST',
+      body: JSON.stringify({ type:"finalizeContacts", cohort: pcCohort, fullName: pcName, email: pcEmail })
+    });
+    const data = await res.json();
+    if(data.status === "error") throw new Error(data.message || "Server reported an error.");
+    pcLocked = true;
+    document.getElementById('pc-locked-banner').style.display = 'block';
+    pcRenderContactsList(); // re-render now that pcLocked is true, hiding Edit buttons but keeping View
+    setStatus(status, true, "Submitted! Staff has been notified. You can still add more contacts below if you get more.");
+    btn.disabled = false; btn.textContent = "Submit / I'm Done";
+  }catch(err){
+    console.error(err);
+    setStatus(status, false, "Something went wrong submitting. Please try again.");
+    btn.disabled = false; btn.textContent = "Submit / I'm Done";
+  }
+}
+</script>
+
+</body>
+</html>
